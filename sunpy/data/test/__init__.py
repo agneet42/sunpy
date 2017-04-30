@@ -48,32 +48,18 @@ def get_available_test_data():
     Prints all available test data
 
     """
-    file_name = ""
-    dir_path = '/'
-    # changing to '\' if windows
-    if(os.name == 'nt'):
-        dir_path = '\\'
     for fn in get_pkg_data_filenames('test', 'sunpy.data', '*'):
         # checking if the file path yields a directory
         if(os.path.isdir(fn)):
             for dir_contents in os.listdir(fn):
-                # printing contents of the directory
-                print(dir_contents)
+                if "__init__" not in dir_contents:
+                    # printing contents of the directory
+                    print(dir_contents)
         else:
-            # iterating in reverse as only the file name is required
-            # and in reverse the file name will be the first to be encountered
-            for file_path in reversed(fn):
-                if(file_path == dir_path):
-                    # ignoring the __init__.py file
-                    if(file_name == "__init__.py"[::-1]):
-                        break
-                    else:
-                        # printing in reverse to accomodate for the reverse iteration
-                        print(file_name[::-1])
-                        file_name = ""
-                        break
-                else:
-                    file_name = file_name + file_path
+            # extracting the filename from the directory
+            if "__init__" not in fn:
+                file_name = os.path.split(fn)[-1]
+                print(file_name)
 
 
 file_list = glob.glob(os.path.join(rootdir, '*.[!p]*'))
